@@ -9,22 +9,6 @@ on:
       - master
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:8.0
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          dotnet restore
-          dotnet tool restore 
-
-      - name: Run Fantomas format fix
-        run: dotnet fantomas Src Test
-
   formatcheck:
     runs-on: ubuntu-latest
     container:

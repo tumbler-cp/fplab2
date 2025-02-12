@@ -89,9 +89,10 @@ let ``Filter Test`` () =
         |> insert "he" 3
         |> insert "hero" 4
         |> insert "her" 5
-
+    
     let isEven value = value % 2 = 0
     let filteredTrie = filter isEven trie
+
     Assert.That(find "hello" filteredTrie, Is.EqualTo None)
     Assert.That(find "hell" filteredTrie, Is.EqualTo(Some 2))
     Assert.That(find "he" filteredTrie, Is.EqualTo None)

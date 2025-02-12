@@ -91,15 +91,22 @@ module PreDict =
                 node.Children
                 |> Map.toSeq
                 |> Seq.choose (fun (char, childNode) ->
-                    filterHelper childNode
-                    |> Option.map (fun filteredChild -> char, filteredChild))
+                    filterHelper childNode |> Option.map (fun filteredChild -> char, filteredChild))
                 |> Map.ofSeq
 
             match node.IsTerminal, node.Value with
             | true, Some value when predicate value ->
-                Some { node with Children = filteredChildren; IsTerminal = true; Value = Some value }
+                Some
+                    { node with
+                        Children = filteredChildren
+                        IsTerminal = true
+                        Value = Some value }
             | _, _ when not filteredChildren.IsEmpty ->
-                Some { node with Children = filteredChildren; IsTerminal = false; Value = None }
+                Some
+                    { node with
+                        Children = filteredChildren
+                        IsTerminal = false
+                        Value = None }
             | _ -> None
 
         match filterHelper trie.Root with
@@ -180,20 +187,20 @@ module PreDict =
 
     let compareTrees (tree1: Trie<'T>) (tree2: Trie<'T>) : bool = compareNodes tree1.Root tree2.Root
 
-    // let rec printTrieNode (node: TrieNode<'T>) (label: string) (indent: string) (isLast: bool) (printValue: 'T -> string) : unit =
-    //     let nodeLabel = if label = "" then "(root)" else label
-    //     let branch = if indent = "" then "" else if isLast then "└── " else "├── "
-    //     let terminalInfo =
-    //         if node.IsTerminal then sprintf " -> %s" (node.Value |> Option.map printValue |> Option.defaultValue "None")
-    //         else ""
-    //     printfn "%s%s%s%s" indent branch nodeLabel terminalInfo
-    //     let newIndent = indent + (if isLast then "    " else "│   ")
-    //     let children = node.Children |> Map.toList
-    //     let count = List.length children
-    //     children |> List.iteri (fun i (key, childNode) ->
-    //         let isLastChild = i = (count - 1)
-    //         printTrieNode childNode (string key) newIndent isLastChild printValue
-    //     )
+// let rec printTrieNode (node: TrieNode<'T>) (label: string) (indent: string) (isLast: bool) (printValue: 'T -> string) : unit =
+//     let nodeLabel = if label = "" then "(root)" else label
+//     let branch = if indent = "" then "" else if isLast then "└── " else "├── "
+//     let terminalInfo =
+//         if node.IsTerminal then sprintf " -> %s" (node.Value |> Option.map printValue |> Option.defaultValue "None")
+//         else ""
+//     printfn "%s%s%s%s" indent branch nodeLabel terminalInfo
+//     let newIndent = indent + (if isLast then "    " else "│   ")
+//     let children = node.Children |> Map.toList
+//     let count = List.length children
+//     children |> List.iteri (fun i (key, childNode) ->
+//         let isLastChild = i = (count - 1)
+//         printTrieNode childNode (string key) newIndent isLastChild printValue
+//     )
 
-    // let printTrie (trie: Trie<'T>) (printValue: 'T -> string) : unit =
-    //     printTrieNode trie.Root "" "" true printValue
+// let printTrie (trie: Trie<'T>) (printValue: 'T -> string) : unit =
+//     printTrieNode trie.Root "" "" true printValue

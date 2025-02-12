@@ -89,7 +89,7 @@ let ``Filter Test`` () =
         |> insert "he" 3
         |> insert "hero" 4
         |> insert "her" 5
-    
+
     let isEven value = value % 2 = 0
     let filteredTrie = filter isEven trie
 

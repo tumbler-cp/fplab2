@@ -187,20 +187,36 @@ module PreDict =
 
     let compareTrees (tree1: Trie<'T>) (tree2: Trie<'T>) : bool = compareNodes tree1.Root tree2.Root
 
-// let rec printTrieNode (node: TrieNode<'T>) (label: string) (indent: string) (isLast: bool) (printValue: 'T -> string) : unit =
-//     let nodeLabel = if label = "" then "(root)" else label
-//     let branch = if indent = "" then "" else if isLast then "└── " else "├── "
-//     let terminalInfo =
-//         if node.IsTerminal then sprintf " -> %s" (node.Value |> Option.map printValue |> Option.defaultValue "None")
-//         else ""
-//     printfn "%s%s%s%s" indent branch nodeLabel terminalInfo
-//     let newIndent = indent + (if isLast then "    " else "│   ")
-//     let children = node.Children |> Map.toList
-//     let count = List.length children
-//     children |> List.iteri (fun i (key, childNode) ->
-//         let isLastChild = i = (count - 1)
-//         printTrieNode childNode (string key) newIndent isLastChild printValue
-//     )
+    let rec printTrieNode
+        (node: TrieNode<'T>)
+        (label: string)
+        (indent: string)
+        (isLast: bool)
+        (printValue: 'T -> string)
+        : unit =
+        let nodeLabel = match label with
+                        | "" -> "(root)"
+                        | _ -> label
 
-// let printTrie (trie: Trie<'T>) (printValue: 'T -> string) : unit =
-//     printTrieNode trie.Root "" "" true printValue
+        let branch = match indent, isLast with
+                     | "", _ -> ""
+                     | _, true -> "└── "
+                     | _, false -> "├── "
+
+        let terminalInfo = match node.IsTerminal, node.Value with
+                           | true, Some value -> sprintf " -> %s" (printValue value)
+                           | true, None -> " -> None"
+                           | false, _ -> ""
+
+        printfn "%s%s%s%s" indent branch nodeLabel terminalInfo
+        let newIndent = indent + (if isLast then "    " else "│   ")
+        let children = node.Children |> Map.toList
+        let count = List.length children
+
+        children
+        |> List.iteri (fun i (key, childNode) ->
+            let isLastChild = i = (count - 1)
+            printTrieNode childNode (string key) newIndent isLastChild printValue)
+
+    let printTrie (trie: Trie<'T>) (printValue: 'T -> string) : unit =
+        printTrieNode trie.Root "" "" true printValue

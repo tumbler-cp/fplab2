@@ -194,19 +194,22 @@ module PreDict =
         (isLast: bool)
         (printValue: 'T -> string)
         : unit =
-        let nodeLabel = match label with
-                        | "" -> "(root)"
-                        | _ -> label
+        let nodeLabel =
+            match label with
+            | "" -> "(root)"
+            | _ -> label
 
-        let branch = match indent, isLast with
-                     | "", _ -> ""
-                     | _, true -> "└── "
-                     | _, false -> "├── "
+        let branch =
+            match indent, isLast with
+            | "", _ -> ""
+            | _, true -> "└── "
+            | _, false -> "├── "
 
-        let terminalInfo = match node.IsTerminal, node.Value with
-                           | true, Some value -> sprintf " -> %s" (printValue value)
-                           | true, None -> " -> None"
-                           | false, _ -> ""
+        let terminalInfo =
+            match node.IsTerminal, node.Value with
+            | true, Some value -> sprintf " -> %s" (printValue value)
+            | true, None -> " -> None"
+            | false, _ -> ""
 
         printfn "%s%s%s%s" indent branch nodeLabel terminalInfo
         let newIndent = indent + (if isLast then "    " else "│   ")

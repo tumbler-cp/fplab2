@@ -137,14 +137,14 @@ let ``Monoid Test`` () =
     Assert.That(compareTrees mergedTrie mergedWithEmpty)
 
 [<Property>]
-let ``empty is neutral element for insert`` (key: string) (value: int) =
+let ``empty is neutral element INSERT`` (key: string) (value: int) =
     let trie1 = insert key value empty
     let trie2 = insert key value trie1
     let result = merge trie1 trie2
     compareTrees trie1 trie2 && compareTrees trie2 result
 
 [<Property>]
-let ``empty is neutral element for merge`` (key: string) (value: int) =
+let ``empty is neutral element for MERGE`` (key: string) (value: int) =
     let trie1 = insert key value empty
     let trie2 = insert key value empty
     compareTrees (merge trie1 empty) trie1 && compareTrees (merge empty trie2) trie2

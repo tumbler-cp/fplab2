@@ -137,24 +137,35 @@ let ``Monoid Test`` () =
     Assert.That(compareTrees mergedTrie mergedWithEmpty)
 
 [<Property>]
-let ``empty is neutral element INSERT`` (key: string) (value: int) =
+let ``Test monoid: empty is neutral element INSERT`` (key: string) (value: int) =
     let trie1 = insert key value empty
     let trie2 = insert key value trie1
     let result = merge trie1 trie2
     compareTrees trie1 trie2 && compareTrees trie2 result
 
 [<Property>]
-let ``empty is neutral element for MERGE`` (key: string) (value: int) =
+let ``Test monoid: empty is neutral element for MERGE`` (key: string) (value: int) =
     let trie1 = insert key value empty
     let trie2 = insert key value empty
     compareTrees (merge trie1 empty) trie1 && compareTrees (merge empty trie2) trie2
 
 
 [<Property>]
-let ``merge is associative`` (key1: string) (key2: string) (key3: string) =
+let ``Test monoid: merge is associative`` (key1: string) (key2: string) (key3: string) =
     let trie1 = insert key1 1 empty
     let trie2 = insert key2 2 empty
     let trie3 = insert key3 3 empty
     let left = merge (merge trie1 trie2) trie3
     let right = merge trie1 (merge trie2 trie3)
     compareTrees left right
+
+[<Property>]
+let ``Test insertion`` (key: string) (value: int) =
+    let trie = insert key value empty
+    Assert.That(find key trie, Is.EqualTo(Some value))
+
+[<Property>]
+let ``Test removing`` (key: string) (value: int) =
+    let trie = insert key value empty
+    let trieAfterRemove = remove key trie
+    compareTrees trieAfterRemove empty
